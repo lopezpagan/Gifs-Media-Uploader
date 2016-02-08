@@ -5,8 +5,9 @@
         return @mkdir($dir,$mode);
     }
 
+    session_start();
 
-    if (isset($_POST)) {
+    if ( isset($_POST)  && isset($_SESSION['logged']) && $_SESSION['logged'] == true ) {
         ############ Edit settings ##############
         $ThumbSquareSize 		= 200; //Thumbnail will be 200x200
         $BigImageMaxSize 		= 500; //Image Maximum height or width
@@ -27,6 +28,7 @@
 
         // Random number will be added after image name
         $RandomNumber 	= rand(0, 9999999999); 
+        $UniqId = uniqid('TLP');
 
         $ImageName 		= str_replace(' ','-',strtolower($_FILES['imageInput']['name'])); //get image name
         $ImageSize 		= $_FILES['imageInput']['size']; // get original image size
@@ -64,37 +66,22 @@
 
         //Construct a new name with random number and extension.
         $NewImageName = $ImageName.'-'.$RandomNumber.'.'.$ImageExt;
+        $NewImageNameID = $UniqId.'.'.$ImageExt;
 
         //set the Destination Image
         $thumb_DestRandImageName 	= $DestinationDirectory.$ThumbPrefix.$NewImageName; //Thumbnail name with destination directory
         $DestRandImageName 			= $DestinationDirectory.$NewImageName; // Image with destination directory
+        $DestRandImageNameID 		= $DestinationDirectory.$NewImageNameID; // Image with destination directory
+              
 
-        //Resize image to Specified Size by calling resizeImage function.
-        if(resizeImage($CurWidth,$CurHeight,$BigImageMaxSize,$DestRandImageName,$CreatedImage,$Quality,$ImageType)) {
-            //Create a square Thumbnail right after, this time we are using cropImage() function
-            if(!cropImage($CurWidth,$CurHeight,$ThumbSquareSize,$thumb_DestRandImageName,$CreatedImage,$Quality,$ImageType)) {
-                    echo 'Error Creating thumbnail';
-                }
-            /*
-            We have succesfully resized and created thumbnail image
-            We can now output image to user's browser or store information in the database
-            */
-            
-            echo($NewImageName);
-            //echo('<img class="media col-xs-12 col-md-6 col-md-offset-3" src="media/gifs/'.$NewImageName.'">');
-             
-            
-            /*
-            // Insert info into database table!
-            mysql_query("INSERT INTO myImageTable (ImageName, ThumbName, ImgPath)
-            VALUES ($DestRandImageName, $thumb_DestRandImageName, 'uploads/')");
-            */
+       if ( move_uploaded_file($TempSrc, $DestRandImageNameID) ){
 
-        } else{
-            die('Resize Error'); //output error
-        }
+            echo($NewImageNameID);
+
+       }  else {
+            echo('File not saved.');
+       }
     }
-
 
     // This function will proportionally resize image 
     function resizeImage($CurWidth,$CurHeight,$MaxSize,$DestFolder,$SrcImage,$Quality,$ImageType) {
