@@ -14,6 +14,7 @@ If you want to upload your gif, press Log In to go to <em>login.php</em>. The ac
 <ul>
 <li>Email: <u>admin@domain.com</u></li>
 <li>Password: admin</li>
+<li>Demo: <a href="http://www.devxlab.com/samples/gifmedia" target="_blank">http://www.devxlab.com/samples/gifmedia</a></li>
 </ul>
 
 <hr>
