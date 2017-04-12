@@ -5,7 +5,7 @@ if( isset($_GET) && !empty($_GET['img']) && $_GET['img'] != 'undefined' ) {
         //die();
     }
     
-    $DomainName = 'http://media.gotsocial.me/';
+    $DomainName = 'http://www.devxlab.com/samples/gifmedia/';
     $PathName = 'media/gifs/';
     $NewImageName = trim($_GET['img']);   
     
